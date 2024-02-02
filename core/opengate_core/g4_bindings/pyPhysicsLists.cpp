@@ -58,6 +58,11 @@ namespace py = pybind11;
 #include "G4DecayPhysics.hh"
 #include "G4RadioactiveDecayPhysics.hh"
 
+#include "G4EmDNAChemistry.hh"
+#include "G4EmDNAChemistry_option1.hh"
+#include "G4EmDNAChemistry_option2.hh"
+#include "G4EmDNAChemistry_option3.hh"
+
 #include "G4VModularPhysicsList.hh"
 #include "G4VPhysicsConstructor.hh"
 #include "G4VUserPhysicsList.hh"
@@ -84,6 +89,21 @@ namespace py = pybind11;
 #define ADD_PHYSICS_CONSTRUCTOR(plname)                                        \
   py::class_<plname, G4VPhysicsConstructor,                                    \
              std::unique_ptr<plname, py::nodelete>>(m, #plname)                \
+      .def(py::init<G4int>());
+
+template<typename C>
+struct ChemistryAdaptator: C {
+	ChemistryAdaptator(G4int verbosity) {
+		C::SetVerboseLevel(verbosity);
+	}
+};
+
+// copied from ADD_PHYSICS_CONSTRUCTOR, adapted to chemistry
+// -> constructor does not accept verbosity
+// TODO SetVerboseLevel?
+#define ADD_CHEMISTRY_CONSTRUCTOR(clname)                                           \
+  py::class_<ChemistryAdaptator<clname>, G4VPhysicsConstructor,                     \
+             std::unique_ptr<ChemistryAdaptator<clname>, py::nodelete>>(m, #clname) \
       .def(py::init<G4int>());
 
 namespace pyPhysicsLists {
@@ -169,6 +189,11 @@ void init_G4PhysicsLists(py::module &m) {
 
   ADD_PHYSICS_CONSTRUCTOR(G4DecayPhysics)
   ADD_PHYSICS_CONSTRUCTOR(G4RadioactiveDecayPhysics)
+
+  ADD_CHEMISTRY_CONSTRUCTOR(G4EmDNAChemistry)
+  ADD_CHEMISTRY_CONSTRUCTOR(G4EmDNAChemistry_option1)
+  ADD_CHEMISTRY_CONSTRUCTOR(G4EmDNAChemistry_option2)
+  ADD_CHEMISTRY_CONSTRUCTOR(G4EmDNAChemistry_option3)
 
   // sort PL vector
   std::sort(plList.begin(), plList.end());

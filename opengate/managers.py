@@ -337,6 +337,10 @@ class PhysicsListManager(GateObject):
         "G4EmDNAPhysics_option7",
         "G4EmDNAPhysics_option8",
         "G4OpticalPhysics",
+        "G4EmDNAChemistry",
+        "G4EmDNAChemistry_option1",
+        "G4EmDNAChemistry_option2",
+        "G4EmDNAChemistry_option3",
     ]
 
     special_physics_constructor_classes = {}
@@ -346,6 +350,9 @@ class PhysicsListManager(GateObject):
     )
     special_physics_constructor_classes["G4OpticalPhysics"] = g4.G4OpticalPhysics
     special_physics_constructor_classes["G4EmDNAPhysics"] = g4.G4EmDNAPhysics
+
+    special_chemistry_constructor_classes = {}
+    #  special_chemistry_constructor_classes["G4EmDNAChemistry_option3"] = g4.G4EmDNAChemistry_option3
 
     def __init__(self, physics_manager, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -404,6 +411,20 @@ class PhysicsListManager(GateObject):
                 except KeyError:
                     fatal(
                         f"Special physics constructor named '{spc}' not found. Available constructors are: {self.special_physics_constructor_classes.keys()}."
+                    )
+        # add special chemistry constructors
+        for (
+            spc,
+            switch,
+        ) in self.physics_manager.special_chemistry_constructors.items():
+            if switch is True:
+                try:
+                    physics_list.RegisterPhysics(
+                        self.special_chemistry_constructor_classes[spc]()
+                    )
+                except KeyError:
+                    fatal(
+                        f"Special chemistry constructor named '{spc}' not found. Available constructors are: {self.special_chemistry_constructor_classes.keys()}."
                     )
         return physics_list
 
@@ -505,6 +526,17 @@ class PhysicsManager(GateObject):
             ),
             {
                 "doc": "Special physics constructors to be added to the physics list, e.g. G4Decay, G4OpticalPhysics. "
+            },
+        ),
+        "special_chemistry_constructors": (
+            Box(
+                [
+                    (spc, False)
+                    for spc in PhysicsListManager.special_chemistry_constructor_classes
+                ]
+            ),
+            {
+                "doc": "Special chemistry constructors to be added to the physics list, e.g. G4EmDNAChemistry, G4EmDNAChemistry_option1, …, G4EmDNAChemistry_option4. "
             },
         ),
     }
