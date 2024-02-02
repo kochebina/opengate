@@ -82,6 +82,8 @@ void init_G4UserEventAction(py::module &);
 
 void init_G4UserTrackingAction(py::module &);
 
+void init_G4UserStackingAction(py::module &);
+
 void init_G4UserSteppingAction(py::module &);
 
 void init_G4Track(py::module &);
@@ -287,6 +289,8 @@ void init_GateEventAction(py::module &);
 
 void init_GateTrackingAction(py::module &);
 
+void init_GateStackingAction(py::module &);
+
 void init_GateSimulationStatisticsActor(py::module &);
 
 void init_GatePhaseSpaceActor(py::module &);
@@ -373,6 +377,7 @@ PYBIND11_MODULE(opengate_core, m) {
   init_G4PrimaryVertex(m);
   init_G4UserEventAction(m);
   init_G4UserTrackingAction(m);
+  init_G4UserStackingAction(m);
   init_G4StepPoint(m);
   init_G4Track(m);
   init_G4Step(m);
@@ -476,6 +481,7 @@ PYBIND11_MODULE(opengate_core, m) {
   init_GateRunAction(m);
   init_GateEventAction(m);
   init_GateTrackingAction(m);
+  init_GateStackingAction(m);
   init_GateDoseActor(m);
   init_GateFluenceActor(m);
   init_GateLETActor(m);

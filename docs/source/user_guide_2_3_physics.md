@@ -100,6 +100,13 @@ Under the hood, this will add two processed to the Geant4 list of processes, G4D
 - <https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsListGuide/html/physicslistguide.html>
 - <http://www.lnhb.fr/nuclear-data/nuclear-data-table/>
 
+**WARNING** The chemistry modules, if needed, must be added explicitly. This is done with:
+
+```
+sim.enable_dnachemistry(???)
+```
+<!-- TODO -->
+
 ### Optical Physics Processes
 
 #### G4OpticalPhysics physics list
