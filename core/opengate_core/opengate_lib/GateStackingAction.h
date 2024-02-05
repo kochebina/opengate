@@ -9,10 +9,7 @@
 #define GateStackingAction_h
 
 #include "G4UserStackingAction.hh"
-#include "GateSourceManager.h"
 #include "GateVActor.h"
-
-class GateSourceManager;
 
 class GateStackingAction: public G4UserStackingAction {
 
@@ -24,6 +21,8 @@ public:
   void RegisterActor(GateVActor *actor);
 
   void NewStage() override;
+
+  auto* stackManager() { return G4UserStackingAction::stackManager; }
 
 protected:
   std::vector<GateVActor*> fNewStageActors;
