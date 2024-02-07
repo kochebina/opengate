@@ -7,21 +7,34 @@
 
 #include "GateChemistryActor.h"
 
+#include <G4EventManager.hh>
 #include <G4DNAChemistryManager.hh>
+#include <G4EmDNAChemistry_option3.hh>
+
+#include "GateHelpersDict.h"
+
+#include "../g4_bindings/chemistryadaptator.h"
 
 GateChemistryActor::GateChemistryActor(pybind11::dict &user_info):
-	GateVActor(user_info)
+	GateVActor(user_info, true)
 {
   fActions.insert("NewStage");
+
+  auto timeStepModelStr = DictGetStr(user_info, "timestep_model");
+	auto timeStepModel = fIRT;
+	if(timeStepModelStr == "IRT")           timeStepModel = fIRT;
+	else if(timeStepModelStr == "SBS")      timeStepModel = fSBS;
+	else if(timeStepModelStr == "IRT_syn")  timeStepModel = fIRT_syn;
+	else /* TODO error; detect Python-side? */;
+
+	auto* chemistryList = ChemistryAdaptator<G4EmDNAChemistry_option3>::getChemistryList();
+	if(chemistryList != nullptr)
+		chemistryList->SetTimeStepModel(timeStepModel);
 }
 
 void GateChemistryActor::NewStage() {
-	std::ofstream of{"/tmp/chem", std::ios_base::app};
-	of << "+ NewStage\n";
-
-	G4cout << "+++ NewStage" << G4endl;
-
-	// if(stackManager->GetNTotalTrack() == 0) {
-		// G4DNAChemistryManager::Instance()->Run();
-	// }
+	auto* stackManager = G4EventManager::GetEventManager()->GetStackManager();
+	if(stackManager != nullptr && stackManager->GetNTotalTrack() == 0) {
+		G4DNAChemistryManager::Instance()->Run();
+	}
 }

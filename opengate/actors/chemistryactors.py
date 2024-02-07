@@ -10,6 +10,8 @@ class ChemistryActor(g4.GateChemistryActor, ActorBase):
 
     def set_default_user_info(user_info):
         ActorBase.set_default_user_info(user_info)
+        user_info.output = "output.root"
+        user_info.timestep_model = "IRT"
 
     def __init__(self, user_info):
         ActorBase.__init__(self, user_info)

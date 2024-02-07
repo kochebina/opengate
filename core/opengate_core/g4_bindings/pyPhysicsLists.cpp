@@ -4,6 +4,7 @@
    of the GNU Lesser General  Public Licence (LGPL)
    See LICENSE.md for further details
    -------------------------------------------------- */
+#include <G4VUserChemistryList.hh>
 #include <pybind11/pybind11.h>
 
 namespace py = pybind11;
@@ -67,6 +68,8 @@ namespace py = pybind11;
 #include "G4VPhysicsConstructor.hh"
 #include "G4VUserPhysicsList.hh"
 
+#include "chemistryadaptator.h"
+
 // macro for adding physics lists: no parameter
 // #define ADD_PHYSICS_LIST0(m, plname) \
 //   py::class_<plname, G4VModularPhysicsList>(m, #plname).def(py::init<>()); \
@@ -91,16 +94,7 @@ namespace py = pybind11;
              std::unique_ptr<plname, py::nodelete>>(m, #plname)                \
       .def(py::init<G4int>());
 
-template<typename C>
-struct ChemistryAdaptator: C {
-	ChemistryAdaptator(G4int verbosity) {
-		C::SetVerboseLevel(verbosity);
-	}
-};
-
 // copied from ADD_PHYSICS_CONSTRUCTOR, adapted to chemistry
-// -> constructor does not accept verbosity
-// TODO SetVerboseLevel?
 #define ADD_CHEMISTRY_CONSTRUCTOR(clname)                                           \
   py::class_<ChemistryAdaptator<clname>, G4VPhysicsConstructor,                     \
              std::unique_ptr<ChemistryAdaptator<clname>, py::nodelete>>(m, #clname) \
