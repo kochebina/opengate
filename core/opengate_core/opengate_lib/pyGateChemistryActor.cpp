@@ -15,5 +15,7 @@ namespace py = pybind11;
 void init_GateChemistryActor(py::module &m) {
   py::class_<GateChemistryActor, std::unique_ptr<GateChemistryActor, py::nodelete>,
              GateVActor>(m, "GateChemistryActor")
-      .def(py::init<py::dict &>());
+      .def(py::init<py::dict &>())
+			.def("get_times", &GateChemistryActor::getTimes)
+			.def("get_data", &GateChemistryActor::getData);
 }

@@ -8,18 +8,49 @@
 #ifndef GateChemistryActor_h
 #define GateChemistryActor_h
 
+#include <G4MolecularConfiguration.hh>
+#include <set>
+
 #include "GateVActor.h"
-#include <pybind11/stl.h>
 
 class G4EmCalculator;
+class G4HCofThisEvent;
 
 class GateChemistryActor : public GateVActor {
-
 public:
   // Constructor
   GateChemistryActor(pybind11::dict &user_info);
 
+  void Initialize(G4HCofThisEvent* hce) override;
+
+  void EndSimulationAction() override;
+  void EndOfRunAction(const G4Run* event) override;
+  void EndOfEventAction(const G4Event* event) override;
+  void SteppingAction(G4Step* step) override;
   void NewStage() override;
+
+  void setTimeBinCount(int);
+
+	[[nodiscard]] pybind11::list getTimes() const;
+	[[nodiscard]] pybind11::dict getData() const;
+
+public:
+  struct SpeciesInfo {
+    int number = 0;
+    double g = 0.;
+    double sqG = 0.;
+  };
+
+  using SpeciesPtr = G4MolecularConfiguration const*;
+  using InnerSpeciesMap = std::map<double, SpeciesInfo>;
+  using SpeciesMap = std::map<SpeciesPtr, InnerSpeciesMap>;
+
+private:
+  SpeciesMap _speciesInfoPerTime;
+
+  double _edepSum = 0;
+  unsigned _nbEvents = 0;
+  std::set<double> _timesToRecord;
 
 };
 
