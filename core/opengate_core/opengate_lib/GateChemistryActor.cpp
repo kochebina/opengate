@@ -45,7 +45,7 @@ GateChemistryActor::GateChemistryActor(pybind11::dict &user_info):
 	else /* TODO error; detect Python-side? */;
 
 	// TODO user defined
-	G4Scheduler::Instance()->SetEndTime(1 * CLHEP::microsecond);
+	G4Scheduler::Instance()->SetEndTime(DictGetDouble(user_info, "end_time"));
 	setTimeBinCount(80);
 
 	{

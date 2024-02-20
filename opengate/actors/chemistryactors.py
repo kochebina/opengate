@@ -1,5 +1,6 @@
 import opengate_core as g4
 from .base import ActorBase
+from ..utility import g4_units
 
 
 class ChemistryActor(g4.GateChemistryActor, ActorBase):
@@ -10,9 +11,11 @@ class ChemistryActor(g4.GateChemistryActor, ActorBase):
 
     def set_default_user_info(user_info):
         ActorBase.set_default_user_info(user_info)
+
         user_info.output = "output.root"
         user_info.timestep_model = "IRT"
         user_info.reactions = []
+        user_info.end_time = 1 * g4_units.s
 
     def __init__(self, user_info):
         ActorBase.__init__(self, user_info)
