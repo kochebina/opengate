@@ -31,7 +31,7 @@ public:
   void SteppingAction(G4Step* step) override;
   void NewStage() override;
 
-  void setTimeBinCount(int);
+  void setTimeBinsCount(int);
 
 	[[nodiscard]] pybind11::list getTimes() const;
 	[[nodiscard]] pybind11::dict getData() const;

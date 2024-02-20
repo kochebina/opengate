@@ -16,6 +16,7 @@ class ChemistryActor(g4.GateChemistryActor, ActorBase):
         user_info.timestep_model = "IRT"
         user_info.reactions = []
         user_info.end_time = 1 * g4_units.s
+        user_info.time_bins_count = 10
 
     def __init__(self, user_info):
         ActorBase.__init__(self, user_info)

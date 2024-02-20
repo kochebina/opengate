@@ -46,7 +46,7 @@ GateChemistryActor::GateChemistryActor(pybind11::dict &user_info):
 
 	// TODO user defined
 	G4Scheduler::Instance()->SetEndTime(DictGetDouble(user_info, "end_time"));
-	setTimeBinCount(80);
+	setTimeBinsCount(DictGetInt(user_info, "time_bins_count"));
 
 	{
 		std::vector<ReactionInput> reactions = getReactionInputs(user_info, "reactions");
@@ -148,7 +148,7 @@ void GateChemistryActor::NewStage() {
 	}
 }
 
-void GateChemistryActor::setTimeBinCount(int n) {
+void GateChemistryActor::setTimeBinsCount(int n) {
 	double timeMin = 1 * CLHEP::ps;
 	double timeMax = G4Scheduler::Instance()->GetEndTime() - 1 * CLHEP::ps;
 	double timeMinLog = std::log10(timeMin);
