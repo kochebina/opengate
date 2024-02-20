@@ -9,7 +9,9 @@
 #define GateChemistryActor_h
 
 #include <G4MolecularConfiguration.hh>
+#include <pybind11/detail/common.h>
 #include <set>
+#include <vector>
 
 #include "GateVActor.h"
 
@@ -35,6 +37,16 @@ public:
 	[[nodiscard]] pybind11::dict getData() const;
 
 public:
+  struct ReactionInput {
+    std::vector<std::string> reactants;
+    std::vector<std::string> products;
+    std::string fix;
+    double rate;
+    int type;
+  };
+
+  using ReactionInputs = std::vector<ReactionInput>;
+
   struct SpeciesInfo {
     int number = 0;
     double g = 0.;
@@ -45,6 +57,9 @@ public:
   using InnerSpeciesMap = std::map<double, SpeciesInfo>;
   using SpeciesMap = std::map<SpeciesPtr, InnerSpeciesMap>;
 
+protected:
+  static ReactionInputs getReactionInputs(pybind11::dict &user_info, std::string const& key);
+
 private:
   SpeciesMap _speciesInfoPerTime;
 
@@ -54,4 +69,4 @@ private:
 
 };
 
-#endif // GateLETActor_h
+#endif

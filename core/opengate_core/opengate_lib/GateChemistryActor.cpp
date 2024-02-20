@@ -18,6 +18,7 @@
 #include <G4UnitsTable.hh>
 #include <G4Scheduler.hh>
 #include <pybind11/pybind11.h>
+#include <pybind11/pytypes.h>
 
 #include "GateHelpersDict.h"
 
@@ -45,28 +46,10 @@ GateChemistryActor::GateChemistryActor(pybind11::dict &user_info):
 
 	// TODO user defined
 	G4Scheduler::Instance()->SetEndTime(1 * CLHEP::microsecond);
-	setTimeBinCount(50);
+	setTimeBinCount(80);
 
 	{
-		struct ReactionInput {
-			std::vector<std::string> reactants;
-			std::vector<std::string> products;
-			std::string fix;
-			double rate;
-			int type;
-		};
-
-		std::vector<ReactionInput> reactions;
-		reactions.push_back(ReactionInput{{"H", "H"}, {"H2"}, "fix", 0.503e10, 0});
-		reactions.push_back(ReactionInput{{"e_aq", "H"}, {"H2", "OHm"}, "fix", 2.50e10, 0});
-		reactions.push_back(ReactionInput{{"e_aq", "e_aq"}, {"H2", "OHm", "OHm"}, "fix", 0.636e10, 0});
-		reactions.push_back(ReactionInput{{"H3Op", "OHm"}, {"H2O"}, "fix", 1.13e11, 0});
-
-		reactions.push_back(ReactionInput{{"OH", "H"}, {"H2O"}, "fix", 1.55e10, 1});
-		reactions.push_back(ReactionInput{{"OH", "OH"}, {"H2O2"}, "fix", 0.55e10, 1});
-		reactions.push_back(ReactionInput{{"e_aq", "OH"}, {"OHm"}, "fix", 2.95e10, 1});
-		reactions.push_back(ReactionInput{{"e_aq", "H2O2"}, {"OHm", "OH"}, "fix", 1.10e10, 1});
-		reactions.push_back(ReactionInput{{"e_aq", "H3Op"}, {"H", "H2O"}, "fix", 2.11e10, 1});
+		std::vector<ReactionInput> reactions = getReactionInputs(user_info, "reactions");
 
 		auto constructReactionTable = [reactions = std::move(reactions)](G4DNAMolecularReactionTable* reactionTable) {
 			reactionTable->Reset();
@@ -118,8 +101,6 @@ void GateChemistryActor::EndOfRunAction(G4Run const*) {
 
 void GateChemistryActor::EndOfEventAction(G4Event const*) {
 	auto* molecularCounter = G4MoleculeCounter::Instance();
-
-	G4cout << "____ edep: " << _edepSum << G4endl;
 
 	if(not G4EventManager::GetEventManager()->GetConstCurrentEvent()->IsAborted()) {
 		auto species = molecularCounter->GetRecordedMolecules();
@@ -208,4 +189,23 @@ pybind11::dict GateChemistryActor::getData() const {
 	}
 
 	return o;
+}
+
+GateChemistryActor::ReactionInputs GateChemistryActor::getReactionInputs(pybind11::dict &user_info, std::string const& key) {
+	ReactionInputs reactionInputs;
+
+	auto reactions = DictGetVecList(user_info, key);
+	for(auto const& reaction: reactions) {
+		ReactionInput reactionInput;
+
+		reactionInput.reactants = reaction[0].cast<std::vector<std::string>>();
+		reactionInput.products = reaction[1].cast<std::vector<std::string>>();
+		reactionInput.fix = reaction[2].cast<std::string>();
+		reactionInput.rate = reaction[3].cast<double>();
+		reactionInput.type = reaction[4].cast<int>();
+
+		reactionInputs.push_back(reactionInput);
+	}
+
+	return reactionInputs;
 }
