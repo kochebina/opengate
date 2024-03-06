@@ -4,8 +4,7 @@ from ..utility import g4_units
 
 
 class ChemistryActor(g4.GateChemistryActor, ActorBase):
-    """
-    """
+    """ """
 
     type_name = "ChemistryActor"
 

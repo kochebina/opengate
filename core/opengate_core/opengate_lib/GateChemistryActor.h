@@ -23,18 +23,18 @@ public:
   // Constructor
   GateChemistryActor(pybind11::dict &user_info);
 
-  void Initialize(G4HCofThisEvent* hce) override;
+  void Initialize(G4HCofThisEvent *hce) override;
 
   void EndSimulationAction() override;
-  void EndOfRunAction(const G4Run* event) override;
-  void EndOfEventAction(const G4Event* event) override;
-  void SteppingAction(G4Step* step) override;
+  void EndOfRunAction(const G4Run *event) override;
+  void EndOfEventAction(const G4Event *event) override;
+  void SteppingAction(G4Step *step) override;
   void NewStage() override;
 
   void setTimeBinsCount(int);
 
-	[[nodiscard]] pybind11::list getTimes() const;
-	[[nodiscard]] pybind11::dict getData() const;
+  [[nodiscard]] pybind11::list getTimes() const;
+  [[nodiscard]] pybind11::dict getData() const;
 
 public:
   struct ReactionInput {
@@ -53,12 +53,13 @@ public:
     double sqG = 0.;
   };
 
-  using SpeciesPtr = G4MolecularConfiguration const*;
+  using SpeciesPtr = G4MolecularConfiguration const *;
   using InnerSpeciesMap = std::map<double, SpeciesInfo>;
   using SpeciesMap = std::map<SpeciesPtr, InnerSpeciesMap>;
 
 protected:
-  static ReactionInputs getReactionInputs(pybind11::dict &user_info, std::string const& key);
+  static ReactionInputs getReactionInputs(pybind11::dict &user_info,
+                                          std::string const &key);
 
 private:
   SpeciesMap _speciesInfoPerTime;
@@ -66,7 +67,6 @@ private:
   double _edepSum = 0;
   unsigned _nbEvents = 0;
   std::set<double> _timesToRecord;
-
 };
 
 #endif

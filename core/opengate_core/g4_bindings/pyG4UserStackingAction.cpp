@@ -23,7 +23,8 @@ public:
 
 void init_G4UserStackingAction(py::module &m) {
 
-  py::class_<G4UserStackingAction, PyG4UserStackingAction>(m, "G4UserStackingAction")
+  py::class_<G4UserStackingAction, PyG4UserStackingAction>(
+      m, "G4UserStackingAction")
       .def(py::init())
       .def("NewStage", &G4UserStackingAction::NewStage);
 }

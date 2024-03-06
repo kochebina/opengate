@@ -95,9 +95,10 @@ namespace py = pybind11;
       .def(py::init<G4int>());
 
 // copied from ADD_PHYSICS_CONSTRUCTOR, adapted to chemistry
-#define ADD_CHEMISTRY_CONSTRUCTOR(clname)                                           \
-  py::class_<ChemistryAdaptator<clname>, G4VPhysicsConstructor,                     \
-             std::unique_ptr<ChemistryAdaptator<clname>, py::nodelete>>(m, #clname) \
+#define ADD_CHEMISTRY_CONSTRUCTOR(clname)                                      \
+  py::class_<ChemistryAdaptator<clname>, G4VPhysicsConstructor,                \
+             std::unique_ptr<ChemistryAdaptator<clname>, py::nodelete>>(       \
+      m, #clname)                                                              \
       .def(py::init<G4int>());
 
 namespace pyPhysicsLists {

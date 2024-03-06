@@ -11,12 +11,12 @@ void GateStackingAction::RegisterActor(GateVActor *actor) {
   auto actions = actor->fActions;
   auto beg = std::find(std::begin(actions), std::end(actions), "NewStage");
   if (beg != actions.end()) {
-		fNewStageActors.push_back(actor);
+    fNewStageActors.push_back(actor);
   }
 }
 
 void GateStackingAction::NewStage() {
-  for (auto* actor : fNewStageActors) {
-		actor->NewStage();
+  for (auto *actor : fNewStageActors) {
+    actor->NewStage();
   }
 }
