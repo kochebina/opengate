@@ -48,7 +48,7 @@ public:
   using ReactionInputs = std::vector<ReactionInput>;
 
   struct SpeciesInfo {
-    int number = 0;
+    int count = 0;
     double g = 0.;
     double sqG = 0.;
   };
@@ -65,8 +65,14 @@ private:
   SpeciesMap _speciesInfoPerTime;
 
   double _edepSum = 0;
+  double _edepSumRun = 0;
   unsigned _nbEvents = 0;
   std::set<double> _timesToRecord;
+
+	int _moleculeCounterVerbose = 0;
+	std::string _timeStepModelStr = "IRT";
+	double _endTime;
+	std::vector<ReactionInput> _reactions;
 };
 
 #endif
