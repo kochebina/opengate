@@ -69,10 +69,10 @@ private:
   unsigned _nbEvents = 0;
   std::set<double> _timesToRecord;
 
-	int _moleculeCounterVerbose = 0;
-	std::string _timeStepModelStr = "IRT";
-	double _endTime;
-	std::vector<ReactionInput> _reactions;
+  int _moleculeCounterVerbose = 0;
+  std::string _timeStepModelStr = "IRT";
+  double _endTime;
+  std::vector<ReactionInput> _reactions;
 };
 
 #endif
