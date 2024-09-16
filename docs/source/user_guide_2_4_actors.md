@@ -313,16 +313,16 @@ When more than two singles are found in coincidence, several type of behavior co
 The naming convention:
 * "Good" means that a pair of singles are in coincidence and passes all filters **minDistanceXY** and **maxDistanceZ**
 * "take" means that 1 or more pairs of coincidences will be stored
-* "accept" means that a unique coincidence, composed of at least three singles will be kept in the data flow and is called "multicoincidence". *TO DO: In the latter case, the multicoincidence will not be written to the disk, but may participate to a possible deadtime or bandwidth occupancy. The user may clear the multicoincidence at any desired step of the acquisition, by using the multipleKiller pulse processor (described in #Multiple coincidence removal).*
 * "remove" prefix means that all events will be discarded and will not produce any coincidence
 
-| Policy name             | Description                                                                                            |
-|-------------------------|--------------------------------------------------------------------------------------------------------|
-| takeAllGoods            | Each good pairs are considered                                                                         |
-| takeWinnerOfGoods       | Only the good pair with the highest energy is considered                                               |
-| takeWinnerIfIsGood      | If the pair with the highest energy is good, take it, otherwise, kill the event                        |
-| keepIfOnlyOneGood       | If exactly one pair is good, keep the multicoincidence                                                 |
-| removeMultiples         | No multiple coincidences are accepted, no matter how many good pairs are present (*killAll in Gate9.X) |
+| Policy name                   | Description                                                                                            |
+|-------------------------------|--------------------------------------------------------------------------------------------------------|
+| takeAllGoods                  | Each good pairs are considered                                                                         |
+| takeWinnerOfGoods             | Only the good pair with the highest energy is considered                                               |
+| takeWinnerIfIsGood            | If the pair with the highest energy is good, take it, otherwise, kill the event                        |
+| takeIfOnlyOneGood             | If exactly one pair is good, keep the multicoincidence                                                 |
+| takeWinnerIfAllAreGoods       | If all pairs are goods, take the one with the highest energy                                           |
+| removeMultiples               | No multiple coincidences are accepted, no matter how many good pairs are present (*killAll in Gate9.X) |
 
 The following figure illustrates an example of different policies application. The stars represent the detected singles. The size of the star, as well as the number next to it, indicate the energy level of the single (ie. single no 1 has more energy than single no 2, which has itself more energy than the single no 3). The lines represent the possible **good** coincidences.
 
@@ -338,7 +338,8 @@ In the table:
 | takeAllGoods            | (1,2)  | (1,2); (1,3); (2,3) | (1,2); (2,3) | (1,3); (2,3) |
 | takeWinnerOfGoods       | (1,2)  | (1,2)               | (1,2)        | (1,3)        |
 | takeWinnerIfIsGood      | (1,2)  | (1,2)               | (1,2)        | \-           |
-| keepIfOnlyOneGood       | \*     | \-                  | \-           | \-           |
+| takeIfOnlyOneGood       | (1,2)  | \-                  | \-           | \-           |
+| takeWinnerIfAllAreGoods | \-     | (1,2)               | \-           | \-           |
 | removeMultiples         | \-     | \-                  | \-           | \-           |
 
 A more detailed example can be found in [test 072](https://github.com/OpenGATE/opengate/blob/master/opengate/tests/src/).
